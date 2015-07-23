@@ -18,6 +18,11 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 
         })
 
+        .state('show', {
+            url: "/show",
+            templateUrl: "html/show.html"
+        })
+
         .state('scan', {
             url: "/scan",
             templateUrl: "html/scan.html",

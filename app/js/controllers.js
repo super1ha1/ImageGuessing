@@ -265,7 +265,26 @@ angular.module('myApp.controller', [])
         function getTypeAlarm(){
             return ( Math.floor((Math.random() * 1000) + 1) % 2) ;
         }
-    });
+    })
+
+    .controller("ShowController", function($scope, $state){
+        var imageArray =[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+        function showOnePairImage(){
+            var position = getImagePosition();
+
+        }
+
+        function getRandomImage(){
+            return Math.floor((Math.random() * 10) + 1);
+        }
+
+        function getImagePosition(){
+            return ( Math.floor((Math.random() * 100) + 1) % 2) ;
+        }
+    })
+
+;
 // A complex subclass of Parse.Object
 var Monster = Parse.Object.extend("Monster", {
     // Instance methods
