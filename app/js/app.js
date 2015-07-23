@@ -20,7 +20,13 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 
         .state('show', {
             url: "/show",
-            templateUrl: "html/show.html"
+            templateUrl: "html/show.html",
+            controller: "ShowController"
+        })
+
+        .state('question', {
+            url: "/question",
+            templateUrl: "html/question.html"
         })
 
         .state('scan', {

@@ -6,57 +6,11 @@ var start = 0;
 var totalScore = 0 ;
 var scanInterval;
 var truckInterval;
-//angular.module('ui.bootstrap.demo', ['ui.bootstrap']).controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
-//
-//    $scope.items = items;
-//    $scope.selected = {
-//        item: $scope.items[0]
-//    };
-//
-//    $scope.ok = function () {
-//        $modalInstance.close($scope.selected.item);
-//    };
-//
-//    $scope.cancel = function () {
-//        $modalInstance.dismiss('cancel');
-//    };
-//});
-
-
 
 angular.module('myApp.controller', [])
     .controller('trialController',  function ($scope,  $state) {
 
-        //$scope.items = ['item1', 'item2', 'item3'];
-        //
-        //$scope.animationsEnabled = true;
-        //
-        //$scope.open = function (size) {
-        //
-        //    var modalInstance = $modal.open({
-        //        animation: $scope.animationsEnabled,
-        //        templateUrl: 'myModalContent.html',
-        //        controller: 'ModalInstanceCtrl',
-        //        size: size,
-        //        resolve: {
-        //            items: function () {
-        //                return $scope.items;
-        //            }
-        //        }
-        //    });
-        //
-        //    modalInstance.result.then(function (selectedItem) {
-        //        $scope.selected = selectedItem;
-        //    }, function () {
-        //        $log.info('Modal dismissed at: ' + new Date());
-        //    });
-        //};
-        //
-        //$scope.toggleAnimation = function () {
-        //    $scope.animationsEnabled = !$scope.animationsEnabled;
-        //};
-// Please note that $modalInstance represents a modal window (instance) dependency.
-// It is not the same as the $modal service used above
+
         $("#score").text(totalScore);
         $(document).ready(function() {
             if( start === 0){
@@ -268,15 +222,42 @@ angular.module('myApp.controller', [])
     })
 
     .controller("ShowController", function($scope, $state){
-        var imageArray =[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        var imageArray =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        var imageInterval = setInterval(function(){
+            showOnePairImage();
+        },5 * 1000);
 
         function showOnePairImage(){
             var position = getImagePosition();
+            console.log("length before start 1: " + imageArray.length);
+            var imageNumber = imageArray[Math.floor(Math.random() * imageArray.length)];
+            var index = imageArray.indexOf(imageNumber);
+            if( index > -1){
+                imageArray.splice(index, 1);
+            }
+            console.log("Image1: " + imageNumber  +" index: " + index);
+            if( imageArray.length === 0){
+                clearInterval(imageInterval);
+                console.log("Clear interval here");
+            }
+            $("#firstImage").attr('src', "/img/bg/bg" + imageNumber + ".jpg" );
 
+            console.log("length before start 2: " + imageArray.length);
+            imageNumber   = imageArray[Math.floor(Math.random() * imageArray.length)];
+            index = imageArray.indexOf(imageNumber);
+            console.log("Image2: " + imageNumber  +" index: " + index);
+            if( index > -1){
+                imageArray.splice(index, 1);
+            }
+            if( imageArray.length === 0){
+                clearInterval(imageInterval);
+                console.log("Clear interval here");
+            }
+            $("#secondImage").attr('src', "/img/bg/bg" + imageNumber + ".jpg" );
         }
 
-        function getRandomImage(){
-            return Math.floor((Math.random() * 10) + 1);
+        function getRandomImage( max){
+            return Math.floor((Math.random() * max) );
         }
 
         function getImagePosition(){

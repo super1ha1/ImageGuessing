@@ -36,3 +36,11 @@
 table, th, td {
   border: 1px solid black;
 }
+
+.imageStyle{
+  height: 350px;
+  width: 300px;
+}
+.textAnswer{
+  height: 200px;
+}
