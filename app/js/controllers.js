@@ -223,9 +223,11 @@ angular.module('myApp.controller', [])
 
     .controller("ShowController", function($scope, $state){
         var imageArray =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+        $scope.finishShowing = false;
         var imageInterval = setInterval(function(){
             showOnePairImage();
-        },5 * 1000);
+        },2 * 1000);
 
         function showOnePairImage(){
             var position = getImagePosition();
@@ -236,26 +238,33 @@ angular.module('myApp.controller', [])
                 imageArray.splice(index, 1);
             }
             console.log("Image1: " + imageNumber  +" index: " + index);
-            if( imageArray.length === 0){
-                clearInterval(imageInterval);
-                console.log("Clear interval here");
-            }
+
+            checkFinishShowing();
             $("#firstImage").attr('src', "/img/bg/bg" + imageNumber + ".jpg" );
 
             console.log("length before start 2: " + imageArray.length);
             imageNumber   = imageArray[Math.floor(Math.random() * imageArray.length)];
             index = imageArray.indexOf(imageNumber);
-            console.log("Image2: " + imageNumber  +" index: " + index);
             if( index > -1){
                 imageArray.splice(index, 1);
             }
-            if( imageArray.length === 0){
-                clearInterval(imageInterval);
-                console.log("Clear interval here");
-            }
+            console.log("Image2: " + imageNumber  +" index: " + index);
+
+
+            checkFinishShowing();
             $("#secondImage").attr('src', "/img/bg/bg" + imageNumber + ".jpg" );
         }
 
+        function checkFinishShowing(){
+            if( imageArray.length === 0){
+                clearInterval(imageInterval);
+                console.log("Clear interval here");
+                $scope.$apply(function(){
+                    $scope.finishShowing = true;
+
+                });
+            }
+        }
         function getRandomImage( max){
             return Math.floor((Math.random() * max) );
         }
