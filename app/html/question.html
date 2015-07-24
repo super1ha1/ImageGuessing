@@ -2,61 +2,77 @@
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
             <h1 class="text-center text-primary"> Can you answer all these questions ?   </h1>
-            <form class="form-horizontal" role="form">
 
-                <div class="form-group">
-                    <label  class="col-sm-12  text-center">
-                        1. Who do you think has the most influence over NTU in next decade ?
-                    </label>
+            <div class="row">
+                <div class="col-sm-10">
+                    <form class="form-horizontal" role="form" style="padding-top: 50px">
+                        <div class="form-group">
+                            <label  class="col-sm-12  text-center">
+                                1. Who do you think has the most influence over NTU in next decade ?
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12  " >
+                                <textarea type="text" class="form-control" rows="6"  ></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label  class="col-sm-12  text-center">
+                                2. What do you know about Marie Curie ?
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12  " >
+                                <textarea type="text" class="form-control" rows="4"  ></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label  class="col-sm-12  text-center">
+                                3. List at least three things about Justin Bieber ?
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12  " >
+                                <textarea type="text" class="form-control" rows="4"  ></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label  class="col-sm-12  text-center">
+                                4. Which is the largest city in the world, in term of population ?
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12  " >
+                                <textarea type="text" class="form-control" rows="4"  ></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-5 col-sm-10">
+
+                                <button type="submit" ui-sref="show" class="btn btn-lg btn-success">
+                                    Let's Start
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-12  " >
-                        <textarea type="text" class="form-control" rows="6"  ></textarea>
+                <div class="col-sm-2" style="padding-top: 50px; padding-left: 20px" >
+                    <div class="row">
+                        <ds-widget-clock show-analog theme="blue-light"></ds-widget-clock>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label  class="col-sm-12  text-center">
-                        2. What do you know about Marie Curie ?
-                    </label>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-12  " >
-                        <textarea type="text" class="form-control" rows="4"  ></textarea>
+                    <div class="row span7 text-center" style="padding-top: 20px" >
+                        <timer  countdown="180" max-time-unit="'minute'" interval="1000">
+                            {{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}
+                        </timer>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label  class="col-sm-12  text-center">
-                        3. List at least three things about Justin Bieber ?
-                    </label>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-12  " >
-                        <textarea type="text" class="form-control" rows="4"  ></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label  class="col-sm-12  text-center">
-                        4. Which is the largest city in the world, in term of population ?
-                    </label>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-12  " >
-                        <textarea type="text" class="form-control" rows="4"  ></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-sm-offset-5 col-sm-10">
-
-                        <button type="submit" ui-sref="show" class="btn btn-lg btn-success">
-                            Let's Start
-                        </button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

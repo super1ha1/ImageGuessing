@@ -273,6 +273,79 @@ angular.module('myApp.controller', [])
             return ( Math.floor((Math.random() * 100) + 1) % 2) ;
         }
     })
+    .controller("TestController", function($scope, $state, $timeout){
+        var LEFT_CLICKED, LEFT_TRUE;
+        $scope.counter = 7;
+        $scope.onTimeout = function(){
+            $scope.counter--;
+            if ($scope.counter > 0){
+                mytimeout = $timeout($scope.onTimeout,1000);
+            }else{
+
+            }
+        };
+        var mytimeout = $timeout($scope.onTimeout, 1000);
+
+        $scope.clickImage = function(leftClick) {
+            LEFT_CLICKED = leftClick;
+            if(LEFT_CLICKED){
+                console.log("LEFT CLICKED");
+            }else{
+                console.log("RIGHT CLICKED");
+            }
+        };
+
+        var imageArray =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+        $scope.finishShowing = false;
+        var imageInterval = setInterval(function(){
+            showOnePairImage();
+        },2 * 1000);
+
+        function showOnePairImage(){
+            var position = getImagePosition();
+            console.log("length before start 1: " + imageArray.length);
+            var imageNumber = imageArray[Math.floor(Math.random() * imageArray.length)];
+            var index = imageArray.indexOf(imageNumber);
+            if( index > -1){
+                imageArray.splice(index, 1);
+            }
+            console.log("Image1: " + imageNumber  +" index: " + index);
+
+            checkFinishShowing();
+            $("#firstImage").attr('src', "/img/bg/bg" + imageNumber + ".jpg" );
+
+            console.log("length before start 2: " + imageArray.length);
+            imageNumber   = imageArray[Math.floor(Math.random() * imageArray.length)];
+            index = imageArray.indexOf(imageNumber);
+            if( index > -1){
+                imageArray.splice(index, 1);
+            }
+            console.log("Image2: " + imageNumber  +" index: " + index);
+
+
+            checkFinishShowing();
+            $("#secondImage").attr('src', "/img/bg/bg" + imageNumber + ".jpg" );
+        }
+
+        function checkFinishShowing(){
+            if( imageArray.length === 0){
+                clearInterval(imageInterval);
+                console.log("Clear interval here");
+                $scope.$apply(function(){
+                    $scope.finishShowing = true;
+
+                });
+            }
+        }
+        function getRandomImage( max){
+            return Math.floor((Math.random() * max) );
+        }
+
+        function getImagePosition(){
+            return ( Math.floor((Math.random() * 100) + 1) % 2) ;
+        }
+    })
 
 ;
 // A complex subclass of Parse.Object

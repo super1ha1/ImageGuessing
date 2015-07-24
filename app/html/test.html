@@ -1,0 +1,17 @@
+<div class="container">
+    <h1 class="text-center text-primary">Which image you have seen before ?</h1>
+
+    <div class="row span7 text-center" style="padding-top: 20px" >
+      <p class=" textCounter">{{counter}} second</p>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-5 col-sm-offset-1 " >
+            <img id="firstImage" ng-src="/img/scan.png" class="imageStyle" ng-click="clickImage(true)">
+        </div>
+        <div class="col-sm-5 col-sm-offset-1 imageStyle">
+            <img  id="secondImage" ng-src="/img/truck.png" class="imageStyle" ng-click="clickImage(false)">
+        </div>
+    </div>
+
+</div>
