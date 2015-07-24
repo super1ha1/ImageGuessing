@@ -21,25 +21,25 @@
         </div>
     </script>
 
-    <h1 class="text-center text-primary">Which image you have seen before ?</h1>
+    <h4 class="text-center text-primary">Which image you have seen before ?</h4>
 
-    <div class="row span7 text-center" style="padding-top: 20px" >
+    <div class="row span7 text-center"  >
       <p class=" textCounter">{{counter}} second</p>
     </div>
 
     <div class="row">
         <div class="col-sm-5 col-sm-offset-1 " >
-            <img id="firstImage" ng-src="/img/scan.png" class="imageStyle" ng-click="clickImage(true)">
+            <img id="firstImage" ng-src="/img/sky.jpg" class="imageStyle" ng-click="clickImage(true)">
         </div>
         <div class="col-sm-5 col-sm-offset-1 imageStyle">
-            <img  id="secondImage" ng-src="/img/truck.png" class="imageStyle" ng-click="clickImage(false)">
+            <img  id="secondImage" ng-src="/img/moon.jpg" class="imageStyle" ng-click="clickImage(false)">
         </div>
     </div>
 
-    <div class="row span7 text-center" style="padding-top: 20px" >
-        <h4 class="lead">You have selected : {{selectImage}}</h4>
+    <div class="row span7 text-center"  >
+        <h4>You have selected : {{selectImage}}</h4>
         <h4>The AI suggestion is: {{suggestImage}}</h4>
-        <h3>Your final answer is: </h3>
+        <h4 class="lead">Your final answer is: </h4>
 
         <div class="row">
             <div class="col-sm-4 col-sm-offset-2">

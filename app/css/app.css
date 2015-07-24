@@ -68,8 +68,8 @@ table, th, td {
 }
 
 .imageStyle{
-  height: 350px;
-  width: 300px;
+  height: 370px;
+  width: 440px;
 }
 .textAnswer{
   height: 500px;
@@ -77,6 +77,6 @@ table, th, td {
 
 /* -------------------TEST.HTML ----------------------------- */
 .textCounter{
-    font-size: 50px;
+    font-size: 20px;
     color: indianred;
 }

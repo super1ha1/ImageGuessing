@@ -6,6 +6,7 @@ var start = 0;
 var totalScore = 0 ;
 var scanInterval;
 var truckInterval;
+var RATING_RETURN;
 
 angular.module('myApp.controller', ['ui.bootstrap'])
     .controller('trialController',  function ($scope,  $state) {
@@ -278,12 +279,10 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
     .controller("TestController", function($scope, $state, $timeout,  $modal, $log) {
         var LEFT_CLICKED, LEFT_TRUE;
-        var ROUND = 1;
+        var ROUND = 0, AI_SUGGEST ;
         var WRONG_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         var CORRECT_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-        var MY_TIMEOUT;
-
-
+        var COUNTER_TIMEOUT,   IMAGE_TIMEOUT;
 
         $scope.animationsEnabled = true;
 
@@ -302,33 +301,46 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             });
 
             modalInstance.result.then(function (selectedItem) {
-                console.log("Return value: " + selectedItem);
-                $scope.selected = selectedItem;
+                console.log("Return rating value: " + selectedItem);
+                if( selectedItem >= 1 && selectedItem <= 10){
+                    if( ROUND < 5){
+                        setTimeout(function(){
+                            reset();
+                            setCounter();
+                            showOnePairImage();
+                        },  1000);
+                    }else{
+                        alert("you have finished the test!");
+                    }
+                }
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
 
-
-
-        var IMAGE_TIMEOUT = setTimeout(function(){
+        IMAGE_TIMEOUT = setTimeout(function(){
             setCounter();
             showOnePairImage();
         }, 3 * 1000);
 
+        function reset(){
+            $scope.selectImage = "";
+            $scope.suggestImage = "";
+            $scope.counter = 7;
+        }
 
         function setCounter (){
             $scope.counter = 7;
-            MY_TIMEOUT = $timeout($scope.onTimeout, 1000);
+            COUNTER_TIMEOUT = $timeout($scope.onTimeout(),  1000);
         }
 
         $scope.onTimeout = function () {
             $scope.counter--;
             if ($scope.counter > 0){
-                MY_TIMEOUT = $timeout($scope.onTimeout,1000);
+                COUNTER_TIMEOUT = $timeout($scope.onTimeout,1000);
             }else{
                 $scope.selectImage = "NULL";
-                if( ROUND %2 === 0){
+                if( AI_SUGGEST % 2 === 0){
                     $scope.suggestImage = "LEFT";
                 }else{
                     $scope.suggestImage = "RIGHT";
@@ -337,13 +349,14 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         };
 
         $scope.clickImage = function (leftClick) {
+            $timeout.cancel(COUNTER_TIMEOUT);
             LEFT_CLICKED = leftClick;
             if( LEFT_CLICKED){
                 $scope.selectImage = "LEFT";
             }else{
                 $scope.selectImage = "RIGHT";
             }
-            if( ROUND %2 === 0){
+            if( AI_SUGGEST %2 === 0){
                 $scope.suggestImage = "LEFT";
             }else{
                 $scope.suggestImage = "RIGHT";
@@ -355,6 +368,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             checkResult();
             $scope.open('lg');
         };
+
         function checkResult(){
             if( (LEFT_CLICKED && LEFT_TRUE)  || (!LEFT_CLICKED && !LEFT_TRUE) ){
                 $scope.result = true;
@@ -363,13 +377,10 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             }
         }
 
-        //var IMAGE_INTERVAL = setInterval(function(){
-        //    setCounter();
-        //    showOnePairImage();
-        //}, 7 * 1000);
-
         function showOnePairImage(){
+            ROUND++;
             var position = getImagePosition();
+            AI_SUGGEST = position % 2;
             if( position === 0){
                 LEFT_TRUE = true;
             }else{
@@ -377,8 +388,8 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             }
             var correctImageNumber, correctIndex, wrongImageNumber, wrongIndex;
 
-             correctImageNumber = CORRECT_IMAGE_ARRAY[Math.floor(Math.random() * CORRECT_IMAGE_ARRAY.length)];
-             correctIndex = CORRECT_IMAGE_ARRAY.indexOf(correctImageNumber);
+            correctImageNumber = CORRECT_IMAGE_ARRAY[Math.floor(Math.random() * CORRECT_IMAGE_ARRAY.length)];
+            correctIndex = CORRECT_IMAGE_ARRAY.indexOf(correctImageNumber);
             if( correctIndex > -1){
                 CORRECT_IMAGE_ARRAY.splice(correctIndex, 1);
             }
@@ -391,8 +402,8 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             }
 
             setImage(correctImageNumber, wrongImageNumber);
-            console.log("Image Wrong: " + wrongImageNumber  +" index: " + wrongIndex + " pos: " + position);
 
+            console.log("Image Wrong: " + wrongImageNumber  +" index: " + wrongIndex + " pos: " + position);
             console.log("length after round: Wrong: " + WRONG_IMAGE_ARRAY.length + " correct: " + CORRECT_IMAGE_ARRAY.length);
             checkFinishShowing();
 
@@ -410,66 +421,14 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
         function checkFinishShowing(){
             if( CORRECT_IMAGE_ARRAY.length === 0 || WRONG_IMAGE_ARRAY.length === 0){
-                clearInterval(IMAGE_INTERVAL);
-                console.log("Clear IMAGE interval here");
+                console.log("Finish the test here");
             }
         }
 
         function getImagePosition(){
             return ( Math.floor((Math.random() * 100) + 1) % 2) ;
         }
-    })
 
-    .controller("ModalDemoCtrl", function ($scope, $modal, $log) {
-
-        $scope.items = ['item1', 'item2', 'item3'];
-
-        $scope.result = true;
-
-        $scope.animationsEnabled = true;
-
-        $scope.open = function (size) {
-
-            var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'myModalContent.html',
-                controller: 'RatingModalController',
-                size: size,
-                resolve: {
-                    result: function () {
-                        return $scope.result;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (selectedItem) {
-                console.log("Return value: " + selectedItem);
-                $scope.selected = selectedItem;
-            }, function () {
-                $log.info('Modal dismissed at: ' + new Date());
-            });
-        };
-
-        $scope.toggleAnimation = function () {
-            $scope.animationsEnabled = !$scope.animationsEnabled;
-        };
-
-    })
-
-    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
-
-        $scope.items = items;
-        $scope.selected = {
-            item: $scope.items[0]
-        };
-
-        $scope.ok = function () {
-            $modalInstance.close($scope.selected.item);
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
     })
 
     .controller('RatingModalController',  function ($scope, $modalInstance, result) {
@@ -504,27 +463,6 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         ];
     })
 
-;
-// A complex subclass of Parse.Object
-var Monster = Parse.Object.extend("Monster", {
-    // Instance methods
-    hasSuperHumanStrength: function () {
-        return this.get("strength") > 18;
-    },
-    // Instance properties go in an initialize method
-    initialize: function (attrs, options) {
-        this.sound = "Rawr"
-    }
-}, {
-    // Class methods
-    spawn: function(strength) {
-        var monster = new Monster();
-        monster.set("strength", strength);
-        return monster;
-    }
-});
 
-//var monster = Monster.spawn(200);
-//alert(monster.get('strength'));  // Displays 200.
-//alert(monster.sound); // Displays Rawr.
+;
 
