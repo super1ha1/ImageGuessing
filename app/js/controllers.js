@@ -275,71 +275,77 @@ angular.module('myApp.controller', [])
     })
     .controller("TestController", function($scope, $state, $timeout){
         var LEFT_CLICKED, LEFT_TRUE;
-        $scope.counter = 7;
+        var WRONG_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        var CORRECT_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        var MY_TIMEOUT;
+
+
         $scope.onTimeout = function(){
             $scope.counter--;
             if ($scope.counter > 0){
-                mytimeout = $timeout($scope.onTimeout,1000);
+                MY_TIMEOUT = $timeout($scope.onTimeout,1000);
             }else{
 
             }
         };
-        var mytimeout = $timeout($scope.onTimeout, 1000);
+        function setCounter (){
+            $scope.counter = 7;
+            MY_TIMEOUT = $timeout($scope.onTimeout, 1000);
+        }
 
         $scope.clickImage = function(leftClick) {
             LEFT_CLICKED = leftClick;
-            if(LEFT_CLICKED){
-                console.log("LEFT CLICKED");
-            }else{
-                console.log("RIGHT CLICKED");
-            }
         };
 
-        var imageArray =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-
-        $scope.finishShowing = false;
-        var imageInterval = setInterval(function(){
+        var IMAGE_INTERVAL = setInterval(function(){
+            setCounter();
             showOnePairImage();
-        },2 * 1000);
+        }, 7 * 1000);
 
         function showOnePairImage(){
             var position = getImagePosition();
-            console.log("length before start 1: " + imageArray.length);
-            var imageNumber = imageArray[Math.floor(Math.random() * imageArray.length)];
-            var index = imageArray.indexOf(imageNumber);
-            if( index > -1){
-                imageArray.splice(index, 1);
+            if( position === 0){
+                LEFT_TRUE = true;
+            }else{
+                LEFT_TRUE = false;
             }
-            console.log("Image1: " + imageNumber  +" index: " + index);
+            var correctImageNumber, correctIndex, wrongImageNumber, wrongIndex;
 
-            checkFinishShowing();
-            $("#firstImage").attr('src', "/img/bg/bg" + imageNumber + ".jpg" );
-
-            console.log("length before start 2: " + imageArray.length);
-            imageNumber   = imageArray[Math.floor(Math.random() * imageArray.length)];
-            index = imageArray.indexOf(imageNumber);
-            if( index > -1){
-                imageArray.splice(index, 1);
+             correctImageNumber = CORRECT_IMAGE_ARRAY[Math.floor(Math.random() * CORRECT_IMAGE_ARRAY.length)];
+             correctIndex = CORRECT_IMAGE_ARRAY.indexOf(correctImageNumber);
+            if( correctIndex > -1){
+                CORRECT_IMAGE_ARRAY.splice(correctIndex, 1);
             }
-            console.log("Image2: " + imageNumber  +" index: " + index);
+            console.log("Image Correct: " + correctImageNumber  +" index: " + correctIndex + " pos: " + position);
 
+            wrongImageNumber   = WRONG_IMAGE_ARRAY[Math.floor(Math.random() * WRONG_IMAGE_ARRAY.length)];
+            wrongIndex = WRONG_IMAGE_ARRAY.indexOf(wrongImageNumber);
+            if( wrongIndex > -1){
+                WRONG_IMAGE_ARRAY.splice(wrongIndex, 1);
+            }
 
+            setImage(correctImageNumber, wrongImageNumber);
+            console.log("Image Wrong: " + wrongImageNumber  +" index: " + wrongIndex + " pos: " + position);
+
+            console.log("length after round: Wrong: " + WRONG_IMAGE_ARRAY.length + " correct: " + CORRECT_IMAGE_ARRAY.length);
             checkFinishShowing();
-            $("#secondImage").attr('src', "/img/bg/bg" + imageNumber + ".jpg" );
+
+        }
+        function setImage(correctImageNumber,wrongImageNumber ){
+            if( LEFT_TRUE){
+                $("#firstImage").attr('src', "/img/bg/bg" + correctImageNumber + ".jpg" );
+                $("#secondImage").attr('src', "/img/wrong/w" + wrongImageNumber + ".jpg" );
+            }else{
+                $("#firstImage").attr('src', "/img/wrong/w" + wrongImageNumber + ".jpg" );
+                $("#secondImage").attr('src', "/img/bg/bg" + correctImageNumber + ".jpg" );
+            }
         }
 
         function checkFinishShowing(){
-            if( imageArray.length === 0){
-                clearInterval(imageInterval);
-                console.log("Clear interval here");
-                $scope.$apply(function(){
-                    $scope.finishShowing = true;
-
-                });
+            if( CORRECT_IMAGE_ARRAY.length === 0 || WRONG_IMAGE_ARRAY.length === 0){
+                clearInterval(IMAGE_INTERVAL);
+                console.log("Clear IMAGE interval here");
             }
-        }
-        function getRandomImage( max){
-            return Math.floor((Math.random() * max) );
         }
 
         function getImagePosition(){
