@@ -276,34 +276,97 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         }
     })
 
-    .controller("TestController", function($scope, $state, $timeout){
+    .controller("TestController", function($scope, $state, $timeout,  $modal, $log) {
         var LEFT_CLICKED, LEFT_TRUE;
+        var ROUND = 1;
         var WRONG_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         var CORRECT_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         var MY_TIMEOUT;
 
 
-        $scope.onTimeout = function(){
-            $scope.counter--;
-            if ($scope.counter > 0){
-                MY_TIMEOUT = $timeout($scope.onTimeout,1000);
-            }else{
 
-            }
+        $scope.animationsEnabled = true;
+
+        $scope.open = function (size) {
+
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'myModalContent.html',
+                controller: 'RatingModalController',
+                size: size,
+                resolve: {
+                    result: function () {
+                        return $scope.result;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                console.log("Return value: " + selectedItem);
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
         };
+
+
+
+        var IMAGE_TIMEOUT = setTimeout(function(){
+            setCounter();
+            showOnePairImage();
+        }, 3 * 1000);
+
+
         function setCounter (){
             $scope.counter = 7;
             MY_TIMEOUT = $timeout($scope.onTimeout, 1000);
         }
 
-        $scope.clickImage = function(leftClick) {
-            LEFT_CLICKED = leftClick;
+        $scope.onTimeout = function () {
+            $scope.counter--;
+            if ($scope.counter > 0){
+                MY_TIMEOUT = $timeout($scope.onTimeout,1000);
+            }else{
+                $scope.selectImage = "NULL";
+                if( ROUND %2 === 0){
+                    $scope.suggestImage = "LEFT";
+                }else{
+                    $scope.suggestImage = "RIGHT";
+                }
+            }
         };
 
-        var IMAGE_INTERVAL = setInterval(function(){
-            setCounter();
-            showOnePairImage();
-        }, 7 * 1000);
+        $scope.clickImage = function (leftClick) {
+            LEFT_CLICKED = leftClick;
+            if( LEFT_CLICKED){
+                $scope.selectImage = "LEFT";
+            }else{
+                $scope.selectImage = "RIGHT";
+            }
+            if( ROUND %2 === 0){
+                $scope.suggestImage = "LEFT";
+            }else{
+                $scope.suggestImage = "RIGHT";
+            }
+        };
+
+        $scope.selectFinalAnswer = function(leftClick){
+            LEFT_CLICKED = leftClick;
+            checkResult();
+            $scope.open('lg');
+        };
+        function checkResult(){
+            if( (LEFT_CLICKED && LEFT_TRUE)  || (!LEFT_CLICKED && !LEFT_TRUE) ){
+                $scope.result = true;
+            }else{
+                $scope.result = false;
+            }
+        }
+
+        //var IMAGE_INTERVAL = setInterval(function(){
+        //    setCounter();
+        //    showOnePairImage();
+        //}, 7 * 1000);
 
         function showOnePairImage(){
             var position = getImagePosition();
@@ -334,6 +397,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             checkFinishShowing();
 
         }
+
         function setImage(correctImageNumber,wrongImageNumber ){
             if( LEFT_TRUE){
                 $("#firstImage").attr('src', "/img/bg/bg" + correctImageNumber + ".jpg" );
