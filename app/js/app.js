@@ -1,5 +1,5 @@
 'use strict';
-var myApp = angular.module('myApp', ['ui.router', 'myApp.controller', 'timer','ds.clock']);
+var myApp = angular.module('myApp', ['ui.router', 'myApp.controller', 'timer','ds.clock', 'ui.bootstrap']);
 myApp.config(function($stateProvider, $urlRouterProvider) {
     //
     // For any unmatched url, redirect to /state1
@@ -45,6 +45,18 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             url: "/truck",
             templateUrl: "html/truck.html",
             controller: 'trialController'
+        })
+
+        .state('model',{
+            url: "/model",
+            templateUrl: "html/model.html",
+            controller : "ModalDemoCtrl"
+        })
+
+        .state('rating', {
+            url: "/rating",
+            templateUrl: "html/rating.html",
+            controller: "RatingModalController"
         })
 
         .state('state1.list', {

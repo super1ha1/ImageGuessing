@@ -7,7 +7,7 @@ var totalScore = 0 ;
 var scanInterval;
 var truckInterval;
 
-angular.module('myApp.controller', [])
+angular.module('myApp.controller', ['ui.bootstrap'])
     .controller('trialController',  function ($scope,  $state) {
 
 
@@ -172,6 +172,7 @@ angular.module('myApp.controller', [])
             clearInterval(scanInterval);
         };
     })
+
     .controller("testController", function($scope, $state){
         $(document).ready(function() {
             $("row2").animate({
@@ -179,6 +180,7 @@ angular.module('myApp.controller', [])
             },5000);
         });
     })
+
     .controller("truckController", function($scope, $state){
         $(document).ready(function() {
             showOneTruck();
@@ -273,6 +275,7 @@ angular.module('myApp.controller', [])
             return ( Math.floor((Math.random() * 100) + 1) % 2) ;
         }
     })
+
     .controller("TestController", function($scope, $state, $timeout){
         var LEFT_CLICKED, LEFT_TRUE;
         var WRONG_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -351,6 +354,90 @@ angular.module('myApp.controller', [])
         function getImagePosition(){
             return ( Math.floor((Math.random() * 100) + 1) % 2) ;
         }
+    })
+
+    .controller("ModalDemoCtrl", function ($scope, $modal, $log) {
+
+        $scope.items = ['item1', 'item2', 'item3'];
+
+        $scope.result = true;
+
+        $scope.animationsEnabled = true;
+
+        $scope.open = function (size) {
+
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'myModalContent.html',
+                controller: 'RatingModalController',
+                size: size,
+                resolve: {
+                    result: function () {
+                        return $scope.result;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                console.log("Return value: " + selectedItem);
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
+
+        $scope.toggleAnimation = function () {
+            $scope.animationsEnabled = !$scope.animationsEnabled;
+        };
+
+    })
+
+    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
+
+        $scope.items = items;
+        $scope.selected = {
+            item: $scope.items[0]
+        };
+
+        $scope.ok = function () {
+            $modalInstance.close($scope.selected.item);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    })
+
+    .controller('RatingModalController',  function ($scope, $modalInstance, result) {
+        if( result){
+            $scope.finalResult = "CORRECT";
+        }else{
+            $scope.finalResult = "WRONG";
+        }
+
+        $scope.rate = {
+            value : 5
+        };
+
+        $scope.max = 10;
+        $scope.isReadonly = false;
+
+        $scope.next = function () {
+            $modalInstance.close($scope.rate.value);
+        };
+
+        $scope.hoveringOver = function (value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / $scope.max);
+        };
+
+        $scope.ratingStates = [
+            {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
+            {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
+            {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
+            {stateOn: 'glyphicon-heart'},
+            {stateOff: 'glyphicon-off'}
+        ];
     })
 
 ;
