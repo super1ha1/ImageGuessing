@@ -315,6 +315,8 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         $scope.animationsEnabled = true;
         $scope.first = "moon";
         $scope.second = "sky";
+        $scope.showAnswer = false;
+
 
         $scope.open = function (size) {
 
@@ -338,7 +340,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
                             resetToStartNewRound();
                             setCounter();
                             showOnePairImage();
-                        }, 2 * 1000);
+                        },  1000);
                     }else{
                         scoreService.setRound(ROUND);
                         scoreService.setScore(TOTAL_SCORE);
@@ -358,7 +360,8 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         function resetToStartNewRound(){
             $scope.selectImage = "";
             $scope.suggestImage = "";
-            $scope.counter = 7;
+            $scope.showAnswer = false;
+
         }
 
         function setCounter (){
@@ -377,17 +380,25 @@ angular.module('myApp.controller', ['ui.bootstrap'])
                 }else{
                     $scope.suggestImage = "RIGHT";
                 }
+                $scope.showAnswer = true;
+
             }
         };
 
         $scope.clickImage = function (leftClick) {
+
             $timeout.cancel(COUNTER_TIMEOUT);
+
+            $scope.showAnswer = true;
+
             LEFT_CLICKED = leftClick;
+
             if( LEFT_CLICKED){
                 $scope.selectImage = "LEFT";
             }else{
                 $scope.selectImage = "RIGHT";
             }
+
             if( AI_SUGGEST %2 === 0){
                 $scope.suggestImage = "LEFT";
             }else{
@@ -397,6 +408,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
         $scope.clickFinalAnswer = function(leftClick){
             LEFT_CLICKED = leftClick;
+
             checkResult();
             $scope.open('lg');
         };
