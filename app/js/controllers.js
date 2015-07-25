@@ -9,6 +9,27 @@ var truckInterval;
 var RATING_RETURN;
 
 angular.module('myApp.controller', ['ui.bootstrap'])
+    .service('scoreService', function(){
+        var result = {
+            score: 0,
+            round : 5
+        };
+        return {
+            getScore: function () {
+                return result.score;
+            },
+            setScore: function(value) {
+                result.score = value;
+            },
+            getRound : function () {
+                return result.round;
+            },
+            setRound : function (value) {
+                result.round = value;
+            }
+        };
+    })
+
     .controller('trialController',  function ($scope,  $state) {
 
 
@@ -228,9 +249,12 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         var imageArray =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
         $scope.finishShowing = false;
+        $scope.first = "moon";
+        $scope.second = "sky";
+
         var imageInterval = setInterval(function(){
             showOnePairImage();
-        },2 * 1000);
+        },3 * 1000);
 
         function showOnePairImage(){
             var position = getImagePosition();
@@ -241,9 +265,11 @@ angular.module('myApp.controller', ['ui.bootstrap'])
                 imageArray.splice(index, 1);
             }
             console.log("Image1: " + imageNumber  +" index: " + index);
-
+            $scope.first = "bg/bg" + imageNumber;
+            $scope.$apply();
             checkFinishShowing();
-            $("#firstImage").attr('src', "/img/bg/bg" + imageNumber + ".jpg" );
+            //$("#firstImage").attr('src', "img/bg/bg" + imageNumber + ".jpg" );
+
 
             console.log("length before start 2: " + imageArray.length);
             imageNumber   = imageArray[Math.floor(Math.random() * imageArray.length)];
@@ -255,7 +281,10 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
 
             checkFinishShowing();
-            $("#secondImage").attr('src', "/img/bg/bg" + imageNumber + ".jpg" );
+            //$("#secondImage").attr('src', "img/bg/bg" + imageNumber + ".jpg" );
+            $scope.second = "bg/bg" + imageNumber;
+            $scope.$apply();
+
         }
 
         function checkFinishShowing(){
@@ -264,7 +293,6 @@ angular.module('myApp.controller', ['ui.bootstrap'])
                 console.log("Clear interval here");
                 $scope.$apply(function(){
                     $scope.finishShowing = true;
-
                 });
             }
         }
@@ -277,14 +305,16 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         }
     })
 
-    .controller("TestController", function($scope, $state, $timeout,  $modal, $log) {
+    .controller("TestController", function($scope, $state, $timeout,  $modal, $log, scoreService) {
         var LEFT_CLICKED, LEFT_TRUE;
-        var ROUND = 0, AI_SUGGEST ;
+        var ROUND = 0, AI_SUGGEST, TOTAL_SCORE = 0 ;
         var WRONG_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         var CORRECT_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         var COUNTER_TIMEOUT,   IMAGE_TIMEOUT;
 
         $scope.animationsEnabled = true;
+        $scope.first = "moon";
+        $scope.second = "sky";
 
         $scope.open = function (size) {
 
@@ -305,12 +335,14 @@ angular.module('myApp.controller', ['ui.bootstrap'])
                 if( selectedItem >= 1 && selectedItem <= 10){
                     if( ROUND < 5){
                         setTimeout(function(){
-                            reset();
+                            resetToStartNewRound();
                             setCounter();
                             showOnePairImage();
-                        },  1000);
+                        }, 2 * 1000);
                     }else{
-                        alert("you have finished the test!");
+                        scoreService.setRound(ROUND);
+                        scoreService.setScore(TOTAL_SCORE);
+                        $state.go('summary');
                     }
                 }
             }, function () {
@@ -323,7 +355,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             showOnePairImage();
         }, 3 * 1000);
 
-        function reset(){
+        function resetToStartNewRound(){
             $scope.selectImage = "";
             $scope.suggestImage = "";
             $scope.counter = 7;
@@ -363,7 +395,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             }
         };
 
-        $scope.selectFinalAnswer = function(leftClick){
+        $scope.clickFinalAnswer = function(leftClick){
             LEFT_CLICKED = leftClick;
             checkResult();
             $scope.open('lg');
@@ -372,6 +404,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         function checkResult(){
             if( (LEFT_CLICKED && LEFT_TRUE)  || (!LEFT_CLICKED && !LEFT_TRUE) ){
                 $scope.result = true;
+                TOTAL_SCORE++;
             }else{
                 $scope.result = false;
             }
@@ -411,11 +444,17 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
         function setImage(correctImageNumber,wrongImageNumber ){
             if( LEFT_TRUE){
-                $("#firstImage").attr('src', "/img/bg/bg" + correctImageNumber + ".jpg" );
-                $("#secondImage").attr('src', "/img/wrong/w" + wrongImageNumber + ".jpg" );
+                //$("#firstImage").attr('src', "img/bg/bg" + correctImageNumber + ".jpg" );
+                //$("#secondImage").attr('src', "img/wrong/w" + wrongImageNumber + ".jpg" );
+                $scope.first = "bg/bg" + correctImageNumber;
+                $scope.second = "wrong/w" + wrongImageNumber;
+                $scope.$apply();
             }else{
-                $("#firstImage").attr('src', "/img/wrong/w" + wrongImageNumber + ".jpg" );
-                $("#secondImage").attr('src', "/img/bg/bg" + correctImageNumber + ".jpg" );
+                //$("#firstImage").attr('src', "img/wrong/w" + wrongImageNumber + ".jpg" );
+                //$("#secondImage").attr('src', "img/bg/bg" + correctImageNumber + ".jpg" );
+                $scope.first = "wrong/w" + wrongImageNumber;
+                $scope.second = "bg/bg" + correctImageNumber;
+                $scope.$apply();
             }
         }
 
@@ -432,6 +471,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
     })
 
     .controller('RatingModalController',  function ($scope, $modalInstance, result) {
+
         if( result){
             $scope.finalResult = "CORRECT";
         }else{
@@ -463,6 +503,37 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         ];
     })
 
+    .controller('SummaryController', function($scope, scoreService){
+
+        $scope.rate = {
+            value : 5
+        };
+
+        $scope.max = 10;
+
+        $scope.isReadonly = false;
+
+        $scope.showScore = false;
+
+        $scope.hoveringOver = function (value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / $scope.max);
+        };
+
+        $scope.guess = function () {
+            $scope.score = scoreService.getScore();
+            $scope.round = scoreService.getRound();
+            $scope.showScore = true;
+        };
+
+        $scope.ratingStates = [
+            {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
+            {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
+            {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
+            {stateOn: 'glyphicon-heart'},
+            {stateOff: 'glyphicon-off'}
+        ];
+    })
 
 ;
 

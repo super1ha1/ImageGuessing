@@ -35,6 +35,12 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             controller: "TestController"
         })
 
+        .state('summary', {
+            url: "/summary",
+            templateUrl: "html/summary.html",
+            controller: "SummaryController"
+        })
+
         .state('scan', {
             url: "/scan",
             templateUrl: "html/scan.html",

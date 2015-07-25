@@ -29,10 +29,10 @@
 
     <div class="row">
         <div class="col-sm-5 col-sm-offset-1 " >
-            <img id="firstImage" ng-src="/img/sky.jpg" class="imageStyle" ng-click="clickImage(true)">
+            <img id="firstImage" ng-src="img/{{first}}.jpg" class="imageStyle" ng-click="clickImage(true)">
         </div>
         <div class="col-sm-5 col-sm-offset-1 imageStyle">
-            <img  id="secondImage" ng-src="/img/moon.jpg" class="imageStyle" ng-click="clickImage(false)">
+            <img  id="secondImage" ng-src="img/{{second}}.jpg" class="imageStyle" ng-click="clickImage(false)">
         </div>
     </div>
 
@@ -43,10 +43,10 @@
 
         <div class="row">
             <div class="col-sm-4 col-sm-offset-2">
-                <button class="btn btn-primary btn-large" ng-click="selectFinalAnswer(true)">LEFT</button>
+                <button class="btn btn-primary btn-large" ng-click="clickFinalAnswer(true)">LEFT</button>
             </div>
             <div class="col-sm-4 ">
-                <button class="btn btn-primary btn-large" ng-click="selectFinalAnswer(true)" >RIGHT</button>
+                <button class="btn btn-primary btn-large" ng-click="clickFinalAnswer(true)" >RIGHT</button>
             </div>
         </div>
 
