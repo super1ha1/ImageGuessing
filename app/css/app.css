@@ -68,8 +68,9 @@ table, th, td {
 }
 
 .imageStyle{
-  height: 370px;
-  width: 440px;
+  height: 537px;
+  width: 400px;
+  /*537 358 > 512 768*/
 }
 .textAnswer{
   height: 500px;
