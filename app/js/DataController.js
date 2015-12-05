@@ -160,9 +160,23 @@ var L_target = [];
 var N_target = [];
 var M_target = [];
 var O_target = [];
+var AA_array = [];
+var BC_array = [];
+var AABC_array = [];
+var S_target = [];
+var QR_target = [];
+var U_target = [];
+var V_target = [];
+var WX_target = [];
+var Y_target = [];
+
 const CORRECT_IMAGE_SIZE = 60;
+const EACH_TYPE_IMAGE_SIZE = 20;
+const PAIR_IMAGE_SHOWING = 40;
 const LEFT_SIDE = "a";
 const RIGHT_SIDE = "b";
+const Y_LEFT = true;
+
 angular.module('myApp.DataController', ['ui.bootstrap'])
 
     .controller('UserController',  function ($scope,  $state) {
@@ -170,22 +184,37 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
     })
 
     .controller('QuestionController',  function ($scope,  $state) {
+        var Pair = function (left, right){
+            this.left = left;
+            this.right = right;
+        };
+
         J_target = getARandomArray(CORRECT_IMAGE_SIZE);
         B_target = sortArrayAccordingToRandomArray(B_Selected, J_target);
         L_target = getARandomArray(CORRECT_IMAGE_SIZE);
         M_target = getARandomArray(CORRECT_IMAGE_SIZE);
-        generateNColumn(L_target, M_target, B_target);
-        console.log(N_target);
+        generateNOTargetArray(L_target, M_target, B_target);
 
         first_45_Distractor = convertArrayElementFromIntToString(first_45_Distractor);
-        console.log(first_45_Distractor);
-
         last_45_Distractor = convertArrayElementFromIntToString(last_45_Distractor);
-        console.log(last_45_Distractor);
-
-
         All_Image_Show_Array = first_45_Distractor.concat(N_target, last_45_Distractor);
-        console.log(All_Image_Show_Array);
+
+
+        AA_array = generateAAArray(N_target, O_target);
+        BC_array = generateBCArray(N_target, O_target);
+        AABC_array = AA_array.concat(BC_array);
+        console.log(AABC_array);
+
+        S_target = getARandomArray(PAIR_IMAGE_SHOWING);
+        QR_target = sortArrayAccordingToRandomArray(AABC_array, S_target);
+        console.log(QR_target);
+
+        U_target = getARandomArray(PAIR_IMAGE_SHOWING);
+        V_target = getARandomArray(PAIR_IMAGE_SHOWING);
+
+        WX_target = generateWXYTargetArray(QR_target, U_target, V_target);
+        console.log(WX_target);
+        console.log(Y_target);
 
 
         function getARandomArray(N){
@@ -195,6 +224,7 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
             }
             return array;
         }
+
         function sortArrayAccordingToRandomArray(sortArray, randomArray){
            var originalRandomArray = randomArray.slice(0);
             var sortedRandomArray = randomArray.sort(function(a,b){return a-b; });
@@ -214,14 +244,14 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
             }
             return newSortedArray;
         }
-        function generateNColumn(L_target, M_target, B_target){
+        function generateNOTargetArray(L_target, M_target, B_target){
             for ( var i = 0 ; i < CORRECT_IMAGE_SIZE; i++){
                 if( L_target[i] > M_target[i]){ //N is left side
                     N_target[i] = B_target[i].toString() + LEFT_SIDE;
-                    O_target[i] = B_target[i].toString + RIGHT_SIDE;
+                    O_target[i] = B_target[i].toString() + RIGHT_SIDE;
                 }else{ // N is right side
                     N_target[i] = B_target[i].toString() + RIGHT_SIDE;
-                    O_target[i] = B_target[i].toString + LEFT_SIDE;
+                    O_target[i] = B_target[i].toString() + LEFT_SIDE;
                 }
             }
         }
@@ -232,5 +262,35 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
             }
             return newArray;
         }
-
+        function generateAAArray(N_target, O_target){
+            var newAAArray = [];
+            for ( var i = 0 ; i < EACH_TYPE_IMAGE_SIZE; i++){
+                var pair = new Pair(N_target[i], O_target[i]);
+                newAAArray[i] = pair;
+            }
+            return newAAArray;
+        }
+        function generateBCArray(N_target, O_target){
+            var newBCArray = [];
+            for ( var i = EACH_TYPE_IMAGE_SIZE ; i < PAIR_IMAGE_SHOWING; i++){
+                var pair = new Pair(N_target[i], O_target[i+ EACH_TYPE_IMAGE_SIZE]);
+                newBCArray[i-EACH_TYPE_IMAGE_SIZE] = pair;
+            }
+            return newBCArray;
+        }
+        function generateWXYTargetArray(QR_target, U_target, V_target){
+            var i, WX_target = [];
+            for (i = 0 ; i < QR_target.length; i++ ){
+                if( U_target[i] > V_target[i]){ // W = Q, X = R, Y = LEFT = True,
+                    var pair = new Pair(QR_target[i].left, QR_target[i].right);
+                    WX_target[i] = pair;
+                    Y_target [i] = Y_LEFT;
+                }else { // W = R, X = Q, Y = RIGHT = 1,
+                    var pair = new Pair(QR_target[i].right, QR_target[i].left);
+                    WX_target[i] = pair;
+                    Y_target [i] = !Y_LEFT;
+                }
+            }
+            return WX_target;
+        }
     });
