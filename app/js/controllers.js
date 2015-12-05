@@ -980,6 +980,7 @@ var allImageArray=[1001,
     9];
 var MAX_VALUE_RATING = 9;
 var MIN_VALUE_RATING = 1;
+const NUMBER_OF_QUESTION = PAIR_IMAGE_SHOWING ;
 
 angular.module('myApp.controller', ['ui.bootstrap'])
     .service('scoreService', function(){
@@ -1008,7 +1009,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         var imageArray = All_Image_Show_Array;
         var currentIndex = 0 ;
         $scope.finishShowing = false;
-        $scope.first = "bg/11a";
+        $scope.first = "bg/1a";
         console.log("length before start: " + imageArray.length);
 
         var imageInterval = setInterval(function(){
@@ -1049,7 +1050,8 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         }
     })
 
-    .controller("TestController", function($scope, $state, $timeout,  $modal, $log, scoreService) {
+    .controller("TestController", function($scope, $state, $timeout,
+                                           $modal, $log, scoreService) {
         var LEFT_CLICKED, LEFT_TRUE;
         var QuestionNumber = 0, AI_SUGGEST, TOTAL_SCORE = 0 ;
         var  INITIAL_DELAY_TIMEOUT;
@@ -1059,8 +1061,8 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         var resultArray = Y_target;
 
         $scope.animationsEnabled = true;
-        $scope.first = "bg/11a";
-        $scope.second = "bg/11b";
+        $scope.first = "bg/1a";
+        $scope.second = "bg/1b";
         $scope.showAnswer = false;
 
 
@@ -1082,7 +1084,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
                 console.log("Return rating value: " + selectedItem);
                 if( selectedItem >= MIN_VALUE_RATING && selectedItem <= MAX_VALUE_RATING){
                     console.log("User select to close the dialog");
-                    if( QuestionNumber < 5){
+                    if( QuestionNumber < NUMBER_OF_QUESTION){
                         setTimeout(function(){
                             resetToStartNewRound();
                             showOnePairImage();
@@ -1109,10 +1111,6 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
         }
 
-        function setCounter (){
-            $scope.counter = 7;
-            COUNTER_TIMEOUT = $timeout($scope.onTimeout(),  1000);
-        }
         function showOnePairImage(){
             QuestionNumber++;
             AI_SUGGEST = AI_choice[QuestionNumber];
@@ -1150,6 +1148,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             }else{
                 $scope.suggestImage = "RIGHT";
             }
+
         };
 
         $scope.clickFinalAnswer = function(leftClick){

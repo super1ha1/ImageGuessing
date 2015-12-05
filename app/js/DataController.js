@@ -203,13 +203,6 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
         M_target = getARandomArray(CORRECT_IMAGE_SIZE);
         generateNOTargetArray(L_target, M_target, B_target);
 
-        var sortArray = B_Selected.concat(first_45_Distractor, last_45_Distractor);
-        var sort = sortArray.sort(function (a, b) {
-            return a - b;
-        });
-        for ( var i = 0 ; i < sort.length; i++){
-            console.log(sort[i]);
-        }
         first_45_Distractor = convertArrayElementFromIntToString(first_45_Distractor);
         last_45_Distractor = convertArrayElementFromIntToString(last_45_Distractor);
         All_Image_Show_Array = first_45_Distractor.concat(N_target, last_45_Distractor);
