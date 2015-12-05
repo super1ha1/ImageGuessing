@@ -1227,7 +1227,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
         $scope.hoveringOver = function (value) {
             $scope.overStar = value;
-            $scope.percent = value; 
+            $scope.percent = value;
         };
 
         $scope.guess = function () {
