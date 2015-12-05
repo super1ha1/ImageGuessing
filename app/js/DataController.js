@@ -200,6 +200,7 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
             this.right = right;
         };
 
+        //Generate list of 150 images to be displayed in All_Image_Show_Array
         J_target = getARandomArray(CORRECT_IMAGE_SIZE);
         B_target = sortArrayAccordingToRandomArray(B_Selected, J_target);
         L_target = getARandomArray(CORRECT_IMAGE_SIZE);
@@ -210,7 +211,7 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
         last_45_Distractor = convertArrayElementFromIntToString(last_45_Distractor);
         All_Image_Show_Array = first_45_Distractor.concat(N_target, last_45_Distractor);
 
-
+        //Generate list of 40 pairs of images to be questioned in WX_target and correct answer in Y_target
         AA_array = generateAAArray(N_target, O_target);
         BC_array = generateBCArray(N_target, O_target);
         AABC_array = AA_array.concat(BC_array);
@@ -224,6 +225,7 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
         WX_target = generateWXYTargetArray(QR_target, U_target, V_target);
 
 
+        //AI Part
         NUMBER_OF_AI_CORRECT_GUESSING = PAIR_IMAGE_SHOWING * AI_correct_percentage;
 
         AI_initial_Hit_Miss = generateInitialAIGuessingArray(NUMBER_OF_AI_CORRECT_GUESSING);
@@ -235,12 +237,8 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
 
         AI_final_Hit_Miss = AI_AA_Hit_miss.concat(AI_BC_Hit_miss);
         AI_final_Hit_Miss = sortArrayAccordingToRandomArray(AI_final_Hit_Miss, S_target);
-        console.log(AI_final_Hit_Miss);
-
 
         AI_suggestion = generateAISuggestion(AI_final_Hit_Miss, Y_target);
-        console.log(Y_target);
-        console.log(AI_suggestion);
 
 
         function getARandomArray(N){
@@ -337,5 +335,5 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
                 }
             }
             return AI_suggestion;
-        };
+        }
     });
