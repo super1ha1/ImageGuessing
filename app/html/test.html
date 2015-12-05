@@ -27,10 +27,6 @@
 
     <h4 class="text-center text-primary">Which image you have seen before ?</h4>
 
-    <div class="row span7 text-center"  >
-      <p class=" textCounter">{{counter}} second</p>
-    </div>
-
     <div class="row">
         <div class="col-sm-5 col-sm-offset-1 " >
             <img id="firstImage" ng-src="img/{{first}}.jpg" class="imageTestingStyle" ng-click="clickImage(true)">
@@ -50,7 +46,7 @@
                 <button class="btn btn-primary btn-large" ng-click="clickFinalAnswer(true)">LEFT</button>
             </div>
             <div class="col-sm-4 ">
-                <button class="btn btn-primary btn-large" ng-click="clickFinalAnswer(true)" >RIGHT</button>
+                <button class="btn btn-primary btn-large" ng-click="clickFinalAnswer(false)" >RIGHT</button>
             </div>
         </div>
 

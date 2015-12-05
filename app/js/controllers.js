@@ -1051,14 +1051,16 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
     .controller("TestController", function($scope, $state, $timeout,  $modal, $log, scoreService) {
         var LEFT_CLICKED, LEFT_TRUE;
-        var ROUND = 0, AI_SUGGEST, TOTAL_SCORE = 0 ;
-        var WRONG_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-        var CORRECT_IMAGE_ARRAY =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-        var COUNTER_TIMEOUT,   IMAGE_TIMEOUT;
+        var QuestionNumber = 0, AI_SUGGEST, TOTAL_SCORE = 0 ;
+        var  INITIAL_DELAY_TIMEOUT;
+
+        var imagePairs = WX_target;
+        var AI_choice = AI_suggestion;
+        var resultArray = Y_target;
 
         $scope.animationsEnabled = true;
-        $scope.first = "moon";
-        $scope.second = "sky";
+        $scope.first = "bg/11a";
+        $scope.second = "bg/11b";
         $scope.showAnswer = false;
 
 
@@ -1079,14 +1081,14 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             modalInstance.result.then(function (selectedItem) {
                 console.log("Return rating value: " + selectedItem);
                 if( selectedItem >= MIN_VALUE_RATING && selectedItem <= MAX_VALUE_RATING){
-                    if( ROUND < 5){
+                    console.log("User select to close the dialog");
+                    if( QuestionNumber < 5){
                         setTimeout(function(){
                             resetToStartNewRound();
-                            setCounter();
                             showOnePairImage();
                         },  1000);
                     }else{
-                        scoreService.setRound(ROUND);
+                        scoreService.setRound(QuestionNumber);
                         scoreService.setScore(TOTAL_SCORE);
                         $state.go('summary');
                     }
@@ -1096,8 +1098,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             });
         };
 
-        IMAGE_TIMEOUT = setTimeout(function(){
-            setCounter();
+        INITIAL_DELAY_TIMEOUT = setTimeout(function(){
             showOnePairImage();
         }, 3 * 1000);
 
@@ -1112,26 +1113,27 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             $scope.counter = 7;
             COUNTER_TIMEOUT = $timeout($scope.onTimeout(),  1000);
         }
+        function showOnePairImage(){
+            QuestionNumber++;
+            AI_SUGGEST = AI_choice[QuestionNumber];
 
-        $scope.onTimeout = function () {
-            $scope.counter--;
-            if ($scope.counter > 0){
-                COUNTER_TIMEOUT = $timeout($scope.onTimeout,1000);
+            if( resultArray[QuestionNumber]){
+                LEFT_TRUE = true;
             }else{
-                $scope.selectImage = "NULL";
-                if( AI_SUGGEST % 2 === 0){
-                    $scope.suggestImage = "LEFT";
-                }else{
-                    $scope.suggestImage = "RIGHT";
-                }
-                $scope.showAnswer = true;
-
+                LEFT_TRUE = false;
             }
-        };
+
+            console.log("Image Left: " + imagePairs[QuestionNumber].left
+                +" Image Right " + imagePairs[QuestionNumber].right + " current question: " + QuestionNumber);
+
+            setImage(imagePairs[QuestionNumber].left, imagePairs[QuestionNumber].right);
+
+            checkFinishShowing();
+
+        }
+
 
         $scope.clickImage = function (leftClick) {
-
-            $timeout.cancel(COUNTER_TIMEOUT);
 
             $scope.showAnswer = true;
 
@@ -1143,7 +1145,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
                 $scope.selectImage = "RIGHT";
             }
 
-            if( AI_SUGGEST %2 === 0){
+            if( AI_SUGGEST ){
                 $scope.suggestImage = "LEFT";
             }else{
                 $scope.suggestImage = "RIGHT";
@@ -1152,7 +1154,6 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
         $scope.clickFinalAnswer = function(leftClick){
             LEFT_CLICKED = leftClick;
-
             checkResult();
             $scope.open('lg');
         };
@@ -1166,64 +1167,17 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             }
         }
 
-        function showOnePairImage(){
-            ROUND++;
-            var position = getImagePosition();
-            AI_SUGGEST = position % 2;
-            if( position === 0){
-                LEFT_TRUE = true;
-            }else{
-                LEFT_TRUE = false;
-            }
-            var correctImageNumber, correctIndex, wrongImageNumber, wrongIndex;
-
-            correctImageNumber = CORRECT_IMAGE_ARRAY[Math.floor(Math.random() * CORRECT_IMAGE_ARRAY.length)];
-            correctIndex = CORRECT_IMAGE_ARRAY.indexOf(correctImageNumber);
-            if( correctIndex > -1){
-                CORRECT_IMAGE_ARRAY.splice(correctIndex, 1);
-            }
-            console.log("Image Correct: " + correctImageNumber  +" index: " + correctIndex + " pos: " + position);
-
-            wrongImageNumber   = WRONG_IMAGE_ARRAY[Math.floor(Math.random() * WRONG_IMAGE_ARRAY.length)];
-            wrongIndex = WRONG_IMAGE_ARRAY.indexOf(wrongImageNumber);
-            if( wrongIndex > -1){
-                WRONG_IMAGE_ARRAY.splice(wrongIndex, 1);
-            }
-
-            setImage(correctImageNumber, wrongImageNumber);
-
-            console.log("Image Wrong: " + wrongImageNumber  +" index: " + wrongIndex + " pos: " + position);
-            console.log("length after round: Wrong: " + WRONG_IMAGE_ARRAY.length + " correct: " + CORRECT_IMAGE_ARRAY.length);
-            checkFinishShowing();
-
-        }
-
-        function setImage(correctImageNumber,wrongImageNumber ){
-            if( LEFT_TRUE){
-                //$("#firstImage").attr('src', "img/bg/bg" + correctImageNumber + ".jpg" );
-                //$("#secondImage").attr('src', "img/wrong/w" + wrongImageNumber + ".jpg" );
-                $scope.first = "bg/bg" + correctImageNumber;
-                $scope.second = "wrong/w" + wrongImageNumber;
+        function setImage(leftImage,rightImage ){
+                $scope.first = "bg/" + leftImage;
+                $scope.second =  "bg/" + rightImage;
                 $scope.$apply();
-            }else{
-                //$("#firstImage").attr('src', "img/wrong/w" + wrongImageNumber + ".jpg" );
-                //$("#secondImage").attr('src', "img/bg/bg" + correctImageNumber + ".jpg" );
-                $scope.first = "wrong/w" + wrongImageNumber;
-                $scope.second = "bg/bg" + correctImageNumber;
-                $scope.$apply();
-            }
         }
 
         function checkFinishShowing(){
-            if( CORRECT_IMAGE_ARRAY.length === 0 || WRONG_IMAGE_ARRAY.length === 0){
+            if( QuestionNumber === PAIR_IMAGE_SHOWING){
                 console.log("Finish the test here");
             }
         }
-
-        function getImagePosition(){
-            return ( Math.floor((Math.random() * 100) + 1) % 2) ;
-        }
-
     })
 
     .controller('RatingModalController',  function ($scope, $modalInstance, result) {
@@ -1265,7 +1219,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             value : 5
         };
 
-        $scope.max = 10;
+        $scope.max = MAX_VALUE_RATING;
 
         $scope.isReadonly = false;
 
@@ -1273,7 +1227,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
         $scope.hoveringOver = function (value) {
             $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.max);
+            $scope.percent = value; 
         };
 
         $scope.guess = function () {
