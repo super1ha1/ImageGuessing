@@ -170,12 +170,23 @@ var V_target = [];
 var WX_target = [];
 var Y_target = [];
 
+
 const CORRECT_IMAGE_SIZE = 60;
 const EACH_TYPE_IMAGE_SIZE = 20;
 const PAIR_IMAGE_SHOWING = 40;
 const LEFT_SIDE = "a";
 const RIGHT_SIDE = "b";
 const Y_LEFT = true;
+
+var AI_correct_percentage = 0.8;
+var AI_initial_Hit_Miss = [];
+var NUMBER_OF_AI_CORRECT_GUESSING;
+var AI_AA_random = [];
+var AI_BC_random = [];
+var AI_AA_Hit_miss = [];
+var AI_BC_Hit_miss = [];
+var AI_final_Hit_Miss = [];
+var AI_suggestion = [];
 
 angular.module('myApp.DataController', ['ui.bootstrap'])
 
@@ -203,18 +214,33 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
         AA_array = generateAAArray(N_target, O_target);
         BC_array = generateBCArray(N_target, O_target);
         AABC_array = AA_array.concat(BC_array);
-        console.log(AABC_array);
 
         S_target = getARandomArray(PAIR_IMAGE_SHOWING);
         QR_target = sortArrayAccordingToRandomArray(AABC_array, S_target);
-        console.log(QR_target);
 
         U_target = getARandomArray(PAIR_IMAGE_SHOWING);
         V_target = getARandomArray(PAIR_IMAGE_SHOWING);
 
         WX_target = generateWXYTargetArray(QR_target, U_target, V_target);
-        console.log(WX_target);
+
+
+        NUMBER_OF_AI_CORRECT_GUESSING = PAIR_IMAGE_SHOWING * AI_correct_percentage;
+
+        AI_initial_Hit_Miss = generateInitialAIGuessingArray(NUMBER_OF_AI_CORRECT_GUESSING);
+        AI_AA_random = getARandomArray(PAIR_IMAGE_SHOWING/2);
+        AI_BC_random = getARandomArray(PAIR_IMAGE_SHOWING/2);
+
+        AI_AA_Hit_miss = sortArrayAccordingToRandomArray(AI_initial_Hit_Miss, AI_AA_random);
+        AI_BC_Hit_miss = sortArrayAccordingToRandomArray(AI_initial_Hit_Miss, AI_BC_random);
+
+        AI_final_Hit_Miss = AI_AA_Hit_miss.concat(AI_BC_Hit_miss);
+        AI_final_Hit_Miss = sortArrayAccordingToRandomArray(AI_final_Hit_Miss, S_target);
+        console.log(AI_final_Hit_Miss);
+
+
+        AI_suggestion = generateAISuggestion(AI_final_Hit_Miss, Y_target);
         console.log(Y_target);
+        console.log(AI_suggestion);
 
 
         function getARandomArray(N){
@@ -224,7 +250,6 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
             }
             return array;
         }
-
         function sortArrayAccordingToRandomArray(sortArray, randomArray){
            var originalRandomArray = randomArray.slice(0);
             var sortedRandomArray = randomArray.sort(function(a,b){return a-b; });
@@ -293,4 +318,24 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
             }
             return WX_target;
         }
+        function generateInitialAIGuessingArray(NUMBER_OF_AI_CORRECT_GUESSING){
+            var newArray = [];
+            var each_type_correct = NUMBER_OF_AI_CORRECT_GUESSING /2;
+            for ( var i = 0 ; i < PAIR_IMAGE_SHOWING/2; i++){
+                newArray[i] = i < each_type_correct ;
+            }
+            return newArray;
+        }
+
+        function generateAISuggestion (AI_final_Hit_Miss, Y_target) {
+            var i, AI_suggestion = [];
+            for ( i =0 ; i < PAIR_IMAGE_SHOWING; i++) {
+                if(AI_final_Hit_Miss[i]){
+                    AI_suggestion[i] = Y_target[i];
+                }else{
+                    AI_suggestion[i] = !Y_target[i];
+                }
+            }
+            return AI_suggestion;
+        };
     });
