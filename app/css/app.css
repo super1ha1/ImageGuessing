@@ -67,15 +67,21 @@ table, th, td {
   border: 1px solid black;
 }
 
-.imageStyle{
-  height: 537px;
-  width: 400px;
-  /*537 358 > 512 768*/
+.imageShowingStyle {
+  /*height: 500px;*/
+  /*width: 450px;*/
+  width : 60% ;
+  height : 50%;
+    margin-left: 10px;
+    /*537 358 > 512 768*/
 }
 .textAnswer{
   height: 500px;
 }
 
+h2.image_text{
+
+}
 /* -------------------TEST.HTML ----------------------------- */
 .textCounter{
     font-size: 20px;

@@ -1001,29 +1001,12 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         };
     })
 
-    .controller("testController", function($scope, $state){
-        $(document).ready(function() {
-            $("row2").animate({
-                backgroundColor: "#000"
-            },5000);
-        });
-    })
-
     .controller("ShowController", function($scope, $state){
 
-        function generateImageArray() {
-            var imageArray =  [] ;
-            for( var i = 0; i < 150; i++){
-                var randomIndex = getRandomImage(allImageArray.length);
-                imageArray.push(allImageArray[randomIndex]);
-            }
-            return imageArray;
-        }
-
-        var imageArray = generateImageArray();
-
+        var imageArray = All_Image_Show_Array;
+        var currentIndex = 0 ;
         $scope.finishShowing = false;
-        $scope.first = "moon";
+        $scope.first = "bg/11a";
         console.log("length before start: " + imageArray.length);
 
         var imageInterval = setInterval(function(){
@@ -1031,26 +1014,15 @@ angular.module('myApp.controller', ['ui.bootstrap'])
         }, 2 * 1000);
 
         function showOnePairImage(){
-            var imageNumber = imageArray[Math.floor(Math.random() * imageArray.length)];
-            var index = imageArray.indexOf(imageNumber);
-            if( index > -1){
-                imageArray.splice(index, 1);
-            }
-            var position = getImagePosition();
-            if( position %2 === 0){
-                imageNumber += "a";
-            }else{
-                imageNumber += "b";
-            }
-            console.log("Image: " + imageNumber  +" index: " + index);
+            var imageNumber = imageArray[currentIndex++];
+            console.log("Image: " + imageNumber  +" index: " + currentIndex);
             $scope.first = "bg/" + imageNumber;
             $scope.$apply();
             checkFinishShowing();
-            //$("#firstImage").attr('src', "img/bg/bg" + imageNumber + ".jpg" );
         }
 
         function checkFinishShowing(){
-            if( imageArray.length === 0){
+            if( currentIndex === imageArray.length ){
                 clearInterval(imageInterval);
                 console.log("Clear interval here");
                 $scope.$apply(function(){
@@ -1064,6 +1036,14 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
         function getImagePosition(){
             return ( Math.floor((Math.random() * 100) + 1) % 2) ;
+        }
+        function generateImageArray() {
+            var imageArray =  [] ;
+            for( var i = 0; i < 150; i++){
+                var randomIndex = getRandomImage(allImageArray.length);
+                imageArray.push(allImageArray[randomIndex]);
+            }
+            return imageArray;
         }
     })
 

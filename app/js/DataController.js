@@ -191,10 +191,6 @@ var AI_suggestion = [];
 angular.module('myApp.DataController', ['ui.bootstrap'])
 
     .controller('UserController',  function ($scope,  $state) {
-
-    })
-
-    .controller('QuestionController',  function ($scope,  $state) {
         var Pair = function (left, right){
             this.left = left;
             this.right = right;
@@ -240,6 +236,7 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
 
         AI_suggestion = generateAISuggestion(AI_final_Hit_Miss, Y_target);
 
+        console.log("Prepare Image Loading OK");
 
         function getARandomArray(N){
             var array = [];
@@ -249,7 +246,7 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
             return array;
         }
         function sortArrayAccordingToRandomArray(sortArray, randomArray){
-           var originalRandomArray = randomArray.slice(0);
+            var originalRandomArray = randomArray.slice(0);
             var sortedRandomArray = randomArray.sort(function(a,b){return a-b; });
             var newIndexArray = [];
             for ( var i = 0 ; i < originalRandomArray.length; i++){
@@ -336,4 +333,8 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
             }
             return AI_suggestion;
         }
+    })
+
+    .controller('QuestionController',  function ($scope,  $state) {
+
     });
