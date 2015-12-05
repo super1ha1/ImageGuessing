@@ -6,11 +6,15 @@
         <div class="modal-body">
             <div class="span7 text-center">
                 <p class="lead">Please rate the level at which you trust the AI ?<br>
-                    0% means not at all, 100% means you definitely trust the AI
+                    1 means not at all, 9 means you definitely trust the AI
                 </p>
                 <rating style="font-size: 30px" ng-model="rate.value" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>
 
-                <span  style="font-size: 30px; margin-left: 20px" class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar">{{percent}}%</span>
+                <div>
+                    <span  style="font-size: 30px; margin-left: 20px"
+                           class="label" ng-class="{'label-warning': percent<3, 'label-info': percent>=3 && percent<7, 'label-success': percent>=7}"
+                           ng-show="overStar">{{percent}}/{{max}}</span>
+                </div>
                 <pre style="margin:15px 0;">Rate: <b>{{rate.value}}/{{max}}</b></pre>
             </div>
         </div>
@@ -29,10 +33,10 @@
 
     <div class="row">
         <div class="col-sm-5 col-sm-offset-1 " >
-            <img id="firstImage" ng-src="img/{{first}}.jpg" class="imageShowingStyle" ng-click="clickImage(true)">
+            <img id="firstImage" ng-src="img/{{first}}.jpg" class="imageTestingStyle" ng-click="clickImage(true)">
         </div>
         <div class="col-sm-5 col-sm-offset-1 imageShowingStyle">
-            <img  id="secondImage" ng-src="img/{{second}}.jpg" class="imageShowingStyle" ng-click="clickImage(false)">
+            <img  id="secondImage" ng-src="img/{{second}}.jpg" class="imageTestingStyle" ng-click="clickImage(false)">
         </div>
     </div>
 

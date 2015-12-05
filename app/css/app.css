@@ -67,7 +67,7 @@ table, th, td {
   border: 1px solid black;
 }
 
-.imageShowingStyle {
+img.imageShowingStyle {
   /*height: 500px;*/
   /*width: 450px;*/
   width : 60% ;
@@ -86,4 +86,9 @@ h2.image_text{
 .textCounter{
     font-size: 20px;
     color: indianred;
+}
+
+img.imageTestingStyle{
+    width : 60% ;
+    height : 50%;
 }

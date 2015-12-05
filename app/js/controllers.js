@@ -978,6 +978,8 @@ var allImageArray=[1001,
     98,
     99,
     9];
+var MAX_VALUE_RATING = 9;
+var MIN_VALUE_RATING = 1;
 
 angular.module('myApp.controller', ['ui.bootstrap'])
     .service('scoreService', function(){
@@ -1076,7 +1078,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
             modalInstance.result.then(function (selectedItem) {
                 console.log("Return rating value: " + selectedItem);
-                if( selectedItem >= 1 && selectedItem <= 10){
+                if( selectedItem >= MIN_VALUE_RATING && selectedItem <= MAX_VALUE_RATING){
                     if( ROUND < 5){
                         setTimeout(function(){
                             resetToStartNewRound();
@@ -1236,7 +1238,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
             value : 5
         };
 
-        $scope.max = 10;
+        $scope.max = MAX_VALUE_RATING;
         $scope.isReadonly = false;
 
         $scope.next = function () {
@@ -1245,7 +1247,7 @@ angular.module('myApp.controller', ['ui.bootstrap'])
 
         $scope.hoveringOver = function (value) {
             $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.max);
+            $scope.percent = value;
         };
 
         $scope.ratingStates = [
