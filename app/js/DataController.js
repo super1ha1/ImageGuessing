@@ -63,176 +63,130 @@ var B_Selected = [5,
     148,
     326,
     576];
+var last_45_Distractor = [1005,
+    707,
+    651,
+    686,
+    1090,
+    351,
+    104,
+    349,
+    116,
+    846,
+    1264,
+    1260,
+    547,
+    273,
+    375,
+    519,
+    1,
+    36,
+    96,
+    509,
+    271,
+    373,
+    624,
+    125,
+    1044,
+    654,
+    1179,
+    136,
+    526,
+    537,
+    324,
+    297,
+    1073,
+    555,
+    250,
+    404,
+    808,
+    408,
+    805,
+    333,
+    145,
+    122,
+    1208,
+    216,
+    1193];
+var first_45_Distractor = [353,
+    412,
+    587,
+    255,
+    295,
+    401,
+    158,
+    522,
+    637,
+    1248,
+    1162,
+    299,
+    521,
+    345,
+    368,
+    590,
+    230,
+    621,
+    1064,
+    143,
+    14,
+    628,
+    1227,
+    403,
+    173,
+    812,
+    1125,
+    362,
+    23,
+    196,
+    380,
+    636,
+    307,
+    1105,
+    332,
+    1159,
+    559,
+    516,
+    579,
+    1290,
+    1101,
+    1238,
+    1291,
+    309,
+    650];
+
 var J_target = [];
+var All_Image_Show_Array = [];
+var L_target = [];
+var N_target = [];
+var M_target = [];
+var O_target = [];
+const CORRECT_IMAGE_SIZE = 60;
+const LEFT_SIDE = "a";
+const RIGHT_SIDE = "b";
 angular.module('myApp.DataController', ['ui.bootstrap'])
 
     .controller('UserController',  function ($scope,  $state) {
 
-        $("#score").text(totalScore);
-        $(document).ready(function() {
-            if( start === 0){
-                scanInterval  = setInterval(function(){
-                    checkScore();
-                    showOneScan();
-                }, 9000);
-                showOneTruck();
-                truckInterval = setInterval(function () {
-                    showOneTruck();
-                }, 30 * 1000);
-                start = 1;
-                console.log("Start the trial here: " + start);
-            }else{
-
-            }
-        });
-
-        $scope.dispatchTruck = function(){
-
-        };
-        function checkScore(){
-            //console.log("Start new scan here " );
-            $("#movingImage")
-                .animate({opacity: "0"}, 200)
-                .animate({top: "20", opacity: "1"}, 10 );
-
-            $("#resultScan").text(function(i, originalText){
-                //console.log(" New round: Current Text is: " + originalText);
-                if( originalText === "TIMEOUT"){
-                    //console.log("result: " +  "TIMEOUT");
-                }else if(originalText === "CORRECT"){
-                    totalScore += 10;
-                    //console.log("score: " +  totalScore);
-                    $("#score").text(totalScore);
-                }else if(originalText ===  "INCORRECT"){
-                    //console.log("result: " +  "INCORRECT");
-                }
-                return "";
-            });
-        }
-
-
-        function showOneTruck(){
-            var truckTime = getRandomTruckTime();
-            console.log("Truck Time: " + truckTime);
-
-            var typeAlarm = getTypeAlarm();
-            console.log("Type: " + typeAlarm);
-
-            setTimeout(function(){
-                console.log("Start new setTimeout here");
-                notifyTruckFull();
-
-                //$("#blue")
-                //    .animate( {backgroundColor:'#fce3ac'}, 6 * 1000);
-                $('tr')
-                    .animate( {height: 300}, 6 * 1000);
-                //.animate({
-                //    'background-color': '#0000FF'
-                //}, truckTime * 1000, function () {
-                //    console.log("Callback when truck end here: animate color");
-                //    notifyTruckFull();
-                //});
-                //.delay(10 * 10000)
-                //.animate({
-                //    backgroundColor : '#FFFFFF'
-                //}, 10);
-
-            }, truckTime * 1000);
-
-
-
-            if( typeAlarm === 1 ){
-                var alarmTimeout = setTimeout(function(){
-                    console.log("Set False Alarm truck is full: ");
-                    notifyTruckFull();
-                },truckTime/2 * 1000);
-            }
-        }
-        function showOneScan(){
-            var correctImage =  getRandomImage() ;
-            var correctImagePosition = getRandomPosition();
-            $("#image" + correctImagePosition).attr('src',  "img/easy/easy" + correctImage + ".png")
-                .click(function(){
-                    $("#resultScan").text("CORRECT");
-                    $("#movingImage").stop(true, false);
-                });
-
-            $("#movingImage")
-                .attr('src',  "img/easy/easy" + correctImage + ".png");
-
-            $("#image" + correctImagePosition).siblings("img").click(function(){
-                $("#resultScan").text("INCORRECT");
-                $("#movingImage").stop(true, false);
-
-            });
-
-            var wrongImage = getAnotherRandomImage(correctImage);
-            var wrongImagePosition = getAnotherRandomPosition(correctImagePosition);
-            $("#image" + wrongImagePosition).attr('src',  "img/easy/easy" + wrongImage + ".png");
-
-            //wrongImage = getAnotherRandomImage(correctImage);
-            //wrongImagePosition = getAnotherRandomPosition(correctImagePosition);
-            //$("#image" + wrongImagePosition).attr('src',  "img/easy/easy" + wrongImage + ".png");
-
-            $("#movingImage")
-                .delay(1.5 * 1000)
-                .animate({top: "+=350"}, 7000, function(){
-                    $("#resultScan").text(function(i, originalText) {
-                        //console.log("End animate, Current Text is: " + originalText);
-                        if (originalText === "") {
-                            return "TIMEOUT";
-                        }
-                    });
-                });
-        }
-        function notifyTruckFull(){
-            $("#alarm").text("Truck is full");
-            setTimeout(function(){
-                $("#alarm").text("");
-            }, 3 * 1000);
-        }
-
-        function getRandomTruckTime(){
-            return Math.floor((Math.random() * 11) + 12);
-        }
-        function getTypeAlarm(){
-            return ( Math.floor((Math.random() * 100) + 1) % 2) ;
-        }
-        function getRandomImage(){
-            return Math.floor((Math.random() * 20) + 1);
-        }
-        function getAnotherRandomImage ( firstImage ){
-            var second =  Math.floor((Math.random() * 20) + 1);
-            while ( second === firstImage){
-                second =  Math.floor((Math.random() * 20) + 1);
-            }
-            return second;
-        }
-        function getRandomPosition(){
-            return Math.floor((Math.random() * 4) + 1 );
-        }
-        function getAnotherRandomPosition(firstImage){
-            var second =  Math.floor((Math.random() * 4) + 1);
-            while ( second === firstImage){
-                second =  Math.floor((Math.random() * 4) + 1);
-            }
-            return second;
-        }
-
-        $scope.goToTruck= function(){
-            $state.go('truck');
-        };
-        $scope.goToScan= function(){
-            $state.go('scan');
-        };
-        $scope.cancel = function(){
-            clearInterval(scanInterval);
-        };
     })
 
     .controller('QuestionController',  function ($scope,  $state) {
-        J_target = getARandomArray(60);
+        J_target = getARandomArray(CORRECT_IMAGE_SIZE);
         B_target = sortArrayAccordingToRandomArray(B_Selected, J_target);
+        L_target = getARandomArray(CORRECT_IMAGE_SIZE);
+        M_target = getARandomArray(CORRECT_IMAGE_SIZE);
+        generateNColumn(L_target, M_target, B_target);
+        console.log(N_target);
+
+        first_45_Distractor = convertArrayElementFromIntToString(first_45_Distractor);
+        console.log(first_45_Distractor);
+
+        last_45_Distractor = convertArrayElementFromIntToString(last_45_Distractor);
+        console.log(last_45_Distractor);
+
+
+        All_Image_Show_Array = first_45_Distractor.concat(N_target, last_45_Distractor);
+        console.log(All_Image_Show_Array);
+
 
         function getARandomArray(N){
             var array = [];
@@ -260,6 +214,23 @@ angular.module('myApp.DataController', ['ui.bootstrap'])
             }
             return newSortedArray;
         }
-
+        function generateNColumn(L_target, M_target, B_target){
+            for ( var i = 0 ; i < CORRECT_IMAGE_SIZE; i++){
+                if( L_target[i] > M_target[i]){ //N is left side
+                    N_target[i] = B_target[i].toString() + LEFT_SIDE;
+                    O_target[i] = B_target[i].toString + RIGHT_SIDE;
+                }else{ // N is right side
+                    N_target[i] = B_target[i].toString() + RIGHT_SIDE;
+                    O_target[i] = B_target[i].toString + LEFT_SIDE;
+                }
+            }
+        }
+        function convertArrayElementFromIntToString(first_45_Distractor) {
+            var newArray = [];
+            for (var i = 0 ; i < first_45_Distractor.length; i++){
+                newArray[i] = first_45_Distractor[i].toString() + LEFT_SIDE;
+            }
+            return newArray;
+        }
 
     });
